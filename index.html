@@ -1,0 +1,86 @@
+
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  body {
+    margin: 0;
+    overflow: hidden;
+    background-color: black;
+  }
+  #drawingCanvas {
+    border: 1px solid white;
+  }
+</style>
+</head>
+<body>
+
+<canvas id="drawingCanvas" width="800" height="600"></canvas>
+
+<script>
+  const canvas = document.getElementById('drawingCanvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  function drawRandomLine() {
+    const x1 = Math.random() * canvas.width;
+    const y1 = Math.random() * canvas.height;
+    const x2 = Math.random() * canvas.width;
+    const y2 = Math.random() * canvas.height;
+    const color = `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`;
+
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+  }
+
+  function drawRandomSpiral() {
+    let angle = 0;
+    let radius = 1;
+    const centerX = Math.random() * canvas.width;
+    const centerY = Math.random() * canvas.height;
+    const color = `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`;
+
+    function drawSegment() {
+      const x = centerX + radius * Math.cos(angle);
+      const y = centerY + radius * Math.sin(angle);
+
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2;
+      ctx.lineTo(x, y);
+      ctx.stroke();
+
+      angle += 0.1;
+      radius += 0.5;
+
+      if(radius < 100) {
+        requestAnimationFrame(drawSegment);
+      }
+    }
+
+    ctx.beginPath();
+    ctx.moveTo(centerX, centerY);
+    drawSegment();
+  }
+
+  function startDrawing() {
+    const randTime = Math.random() * 3000 + 500;
+    setTimeout(() => {
+      if(Math.random() > 0.5) {
+        drawRandomLine();
+      } else {
+        drawRandomSpiral();
+      }
+      startDrawing();
+    }, randTime);
+  }
+
+  startDrawing();
+</script>
+</body>
+</html>
