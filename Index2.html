@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    body, html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background-color: #000;
+    }
+    canvas {
+        display: block;
+    }
+</style>
+</head>
+<body>
+<canvas id="doodleCanvas"></canvas>
+<script>
+    let canvas = document.getElementById('doodleCanvas');
+    let ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let x = Math.random() * canvas.width;
+    let y = Math.random() * canvas.height;
+
+    let noiseOffsetX = Math.random() * 1000;
+    let noiseOffsetY = Math.random() * 1000;
+
+    function noise(x, y) {
+        return Math.sin(Math.sqrt(x * x + y * y));
+    }
+
+    function draw() {
+        ctx.strokeStyle = `hsl(${Math.random() * 360}, 100%, 50%)`;
+
+        let nextX = x + (Math.random() - 0.5) * 10;
+        let nextY = y + (Math.random() - 0.5) * 10;
+
+        let cp1x = x + Math.random() * 50 - 25;
+        let cp1y = y + Math.random() * 50 - 25;
+        let cp2x = nextX + Math.random() * 50 - 25;
+        let cp2y = nextY + Math.random() * 50 - 25;
+
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, nextX, nextY);
+        ctx.stroke();
+
+        x = nextX;
+        y = nextY;
+
+        noiseOffsetX += Math.random() * 0.2 - 0.1; // Random increment value for X
+        noiseOffsetY += Math.random() * 0.2 - 0.1; // Random increment value for Y
+
+        requestAnimationFrame(draw);
+    }
+
+    function changePosition() {
+        x = Math.random() * canvas.width;
+        y = Math.random() * canvas.height;
+        setTimeout(changePosition, Math.random() * 5000 + 2000);
+    }
+
+    draw();
+    changePosition();
+</script>
+</body>
+</html>
